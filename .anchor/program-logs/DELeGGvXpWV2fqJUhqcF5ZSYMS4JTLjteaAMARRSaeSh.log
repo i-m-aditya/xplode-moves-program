@@ -1,0 +1,25 @@
+Streaming transaction logs mentioning DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh. Confirmed commitment
+Transaction executed in slot 381239191:
+  Signature: 2TsagV5RcnfQn5yKfyk4MWqo3CYWrDxoUiuk5gP11KdM3c5DV9TXiNpJW5JsdFDWyi29xVZbmnZX4YuB7cu1ekNr
+  Status: Ok
+  Log Messages:
+    Program 7oEVduKtpfgYQYPWCdZoCYYwPp41Qeh2DJd3qZ7mWZaB invoke [1]
+    Program log: Instruction: DelegateGame
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh invoke [2]
+    Program log: Processing instruction: Delegate
+    Program 11111111111111111111111111111111 invoke [3]
+    Program 11111111111111111111111111111111 success
+    Program 11111111111111111111111111111111 invoke [3]
+    Program 11111111111111111111111111111111 success
+    Program DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh consumed 19793 of 174371 compute units
+    Program DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh success
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program log: Game test-game-er-1747395825073 delegated to ephemeral rollup
+    Program 7oEVduKtpfgYQYPWCdZoCYYwPp41Qeh2DJd3qZ7mWZaB consumed 48266 of 200000 compute units
+    Program 7oEVduKtpfgYQYPWCdZoCYYwPp41Qeh2DJd3qZ7mWZaB success
+Disconnected: receiving on an empty and disconnected channel

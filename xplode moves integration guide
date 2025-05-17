@@ -1,0 +1,154 @@
+
+## Available Endpoints
+
+### 1. Initialize Game
+**Endpoint:** `POST /initialize`
+**Purpose:** Creates a new game instance on the blockchain
+
+**Request Body:**
+```typescript
+{
+  gameId: string;      // Unique identifier for the game
+  gridSize: number;    // Size of the game grid (max 5)
+  bombPositions: {     // Array of bomb coordinates
+    x: number;
+    y: number;
+  }[];
+}
+```
+
+**Response:**
+```typescript
+{
+  success: boolean;
+  transaction: string;  // Transaction hash if successful
+  error?: string;      // Error message if failed
+}
+```
+
+### 2. Record Move
+**Endpoint:** `POST /move`
+**Purpose:** Records a player's move in the game
+
+**Request Body:**
+```typescript
+{
+  gameId: string;      // Game identifier
+  playerName: string;  // Name of the player making the move
+  cell: {             // Coordinates of the move
+    x: number;
+    y: number;
+  }
+}
+```
+
+**Response:**
+```typescript
+{
+  success: boolean;
+  transaction: string;  // Transaction hash if successful
+  error?: string;      // Error message if failed
+}
+```
+
+### 3. Commit Game
+**Endpoint:** `POST /commit`
+**Purpose:** Commits the game state and undelegates from the rollup
+
+**Request Body:**
+```typescript
+{
+  gameId: string;      // Game identifier
+}
+```
+
+**Response:**
+```typescript
+{
+  success: boolean;
+  transaction: string;  // Transaction hash if successful
+  error?: string;      // Error message if failed
+}
+```
+
+## Integration Flow
+
+1. **Game Initialization**
+   - Call `/initialize` when starting a new game
+   - Store the returned transaction hash for reference
+   - Wait for transaction confirmation before proceeding
+
+2. **Recording Moves**
+   - Call `/move` after each valid player move
+   - Handle any errors appropriately
+   - Consider implementing retry logic for failed transactions
+
+3. **Game Completion**
+   - Call `/commit` when the game ends
+   - This will commit all moves to the base layer
+   - Store the final transaction hash
+
+## Error Handling
+
+- All endpoints return 500 status code for server errors
+- Check the `success` field in responses
+- Error messages are provided in the `error` field
+- Implement appropriate retry logic for transient failures
+
+## Important Notes
+
+1. The microservice uses the local Solana keypair from `~/.config/solana/id.json`
+2. All game IDs are automatically padded to 32 bytes
+3. The service handles both base layer and rollup transactions
+4. Transaction confirmations may take a few seconds
+5. The service includes built-in logging for debugging
+
+## Example Integration Code
+
+```typescript
+class GameServer {
+  private readonly API_BASE = 'http://localhost:3000/api/game';
+
+  async initializeGame(gameId: string, gridSize: number, bombPositions: Coordinate[]) {
+    const response = await fetch(`${this.API_BASE}/initialize`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ gameId, gridSize, bombPositions })
+    });
+    return await response.json();
+  }
+
+  async recordMove(gameId: string, playerName: string, cell: Coordinate) {
+    const response = await fetch(`${this.API_BASE}/move`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ gameId, playerName, cell })
+    });
+    return await response.json();
+  }
+
+  async commitGame(gameId: string) {
+    const response = await fetch(`${this.API_BASE}/commit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ gameId })
+    });
+    return await response.json();
+  }
+}
+```
+
+## Testing
+
+1. Start the microservice: `npm start`
+2. Ensure the service is running on port 3000
+3. Test each endpoint with sample data
+4. Monitor the logs for any issues
+5. Verify transactions on the blockchain
+
+## Security Considerations
+
+1. The microservice uses the local Solana keypair
+2. All endpoints are unauthenticated - consider adding authentication
+3. Input validation is performed on the microservice side
+4. Consider rate limiting for production use
